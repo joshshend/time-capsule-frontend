@@ -211,13 +211,14 @@ function renderEntries(entries) {
     const titleBar = document.createElement("div");
     titleBar.className = "entry-header";
     titleBar.innerHTML = `
-      <strong>${entry.title}</strong>
-      <span class="timestamp">${new Date(entry.unlockDate).toLocaleDateString(undefined, {
-        weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
-      })}</span>
-      <button class="delete-btn" onclick="deleteEntry(${entry.id})">Delete</button>
-      <span class='arrow'>▶</span>
-    `;
+  <strong>${entry.title}</strong>
+  <span class="timestamp">${new Date(entry.unlockDate).toLocaleDateString(undefined, {
+    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+  })}</span>
+  <button class="delete-btn" onclick="deleteEntry('${entry._id}')">Delete</button>
+  <span class='arrow'>▶</span>
+`;
+
 
     titleBar.onclick = (e) => {
       if (!e.target.classList.contains("delete-btn")) {
@@ -355,3 +356,16 @@ function updateAuthUI() {
 
 }
 
+function deleteEntry(entryId) {
+  if (!confirm("Are you sure you want to delete this entry?")) return;
+
+  authFetch(`${BASE_URL}/api/entries/${entryId}`, {
+    method: "DELETE"
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to delete entry");
+      return res.json();
+    })
+    .then(() => showEntries())
+    .catch(err => console.error("Delete failed:", err));
+}
