@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      rel="icon"
+      href="https://cdn-icons-png.flaticon.com/512/3669/3669932.png"
+      type="image/png"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Time Capsule</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=UnifrakturCook:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="header-center">
+        <h1>📦 Digital Time Capsule</h1>
+      </div>
+      <button id="logoutTopBtn" onclick="logoutUser()">Logout</button>
+    </header>
+
+    <div id="authPanel">
+      <input type="email" id="emailInput" placeholder="Email" />
+      <input type="password" id="passwordInput" placeholder="Password" />
+
+      <!-- 🔁 Remove onclick=...arguments, just call the functions -->
+      <button onclick="registerUser()">Register</button>
+      <button onclick="loginUser()">Login</button>
+      <button onclick="logoutUser()">Logout</button>
+    </div>
+
+    <div id="loggedInMessage" style="display: none">
+      ✅ You are logged in. Your entries are now private and synced to the
+      cloud.
+    </div>
+
+    <p class="register-hint">
+      Don't have an account? Enter an email and password, then click "Register".
+    </p>
+
+    <main>
+      <label for="entryTitle">Title:</label>
+      <input type="text" id="entryTitle" placeholder="e.g. My Future Dreams" />
+
+      <label for="message">Write your message:</label>
+      <textarea
+        id="message"
+        rows="5"
+        placeholder="Click 'Give Me A Prompt' or type your message here..."
+      ></textarea>
+
+      <label for="unlockDate">Unlock Date:</label>
+      <input type="datetime-local" id="unlockDate" />
+
+      <div class="button-group">
+        <button onclick="saveEntry()">Save Entry</button>
+        <button onclick="toggleAllEntries()">Toggle All Entries</button>
+        <button onclick="clearEntries()">Delete All Entries</button>
+        <button id="themeToggle" onclick="toggleDarkMode()">
+          Toggle Dark Mode
+        </button>
+        <button onclick="givePrompt()">Give Me A Prompt</button>
+      </div>
+
+      <div class="filter-search">
+        <label for="filterSelect">Sort/Filter Entries:</label>
+        <select id="filterSelect" onchange="filterEntries()">
+          <option value="all">All Entries</option>
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="locked">Only Locked</option>
+          <option value="unlocked">Only Unlocked</option>
+          <option value="az">Title A–Z</option>
+          <option value="za">Title Z–A</option>
+        </select>
+
+        <input
+          type="text"
+          id="searchBar"
+          placeholder="Search entries by title or text..."
+        />
+      </div>
+    </main>
+
+    <hr class="divider" />
+
+    <div class="entries-header">
+      <h2>Entries</h2>
+      <button class="refresh-btn" onclick="showEntries()">🔄 Refresh</button>
+    </div>
+    <div id="entries"></div>
+
+    <svg style="display: none">
+      <symbol id="lock-icon" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M12 17a2 2 0 1 0 0-4a2 2 0 0 0 0 4m6-6h-1V9a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2m-3 0H9V9a3 3 0 0 1 6 0z"
+        />
+      </symbol>
+      <symbol id="key-icon" viewBox="0 0 24 24">
+        <path
+          fill="currentColor"
+          d="M7 14a3 3 0 1 1 0-6a3 3 0 0 1 0 6m0-8a5 5 0 1 0 4.9 6H17v2h2v-2h1V8h-6.1A5 5 0 0 0 7 6z"
+        />
+      </symbol>
+    </svg>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <footer class="site-footer">Made with ❤️ by Joshua Shen</footer>
+  </body>
+</html>
