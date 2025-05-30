@@ -138,7 +138,7 @@ function saveEntry() {
 
 
 function showEntries() {
-  authFetch(`${BASE_URL}/api/register`)
+  authFetch(`${BASE_URL}/api/entries`)
     .then((res) => {
       if (!res.ok) throw new Error("Not logged in or error");
       return res.json();
