@@ -167,14 +167,37 @@ function renderEntries(entries) {
     return;
   }
 
+  // Apply sorting
+  switch (filter) {
+    case "az":
+      entries.sort((a, b) => a.title.localeCompare(b.title));
+      break;
+    case "za":
+      entries.sort((a, b) => b.title.localeCompare(a.title));
+      break;
+    case "newest":
+      entries.sort((a, b) => new Date(b.unlockDate) - new Date(a.unlockDate));
+      break;
+    case "oldest":
+      entries.sort((a, b) => new Date(a.unlockDate) - new Date(b.unlockDate));
+      break;
+  }
+
   let hasVisibleEntries = false;
 
   for (let entry of entries) {
     const isUnlocked = new Date(entry.unlockDate) <= now;
     const inTitle = entry.title.toLowerCase().includes(searchQuery);
     const inMessage = entry.message.toLowerCase().includes(searchQuery);
+
     if (!inTitle && !inMessage) continue;
-    if ((filter === "locked" && isUnlocked) || (filter === "unlocked" && !isUnlocked)) continue;
+
+    if (
+      (filter === "locked" && isUnlocked) ||
+      (filter === "unlocked" && !isUnlocked)
+    ) {
+      continue;
+    }
 
     hasVisibleEntries = true;
 
@@ -244,33 +267,12 @@ function renderEntries(entries) {
     container.appendChild(div);
   }
 
-  // If filter removed all entries
   if (!hasVisibleEntries && entries.length > 0) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "no-entries";
     emptyMessage.innerHTML = `<p>No entries match your current filters or search.</p>`;
     container.appendChild(emptyMessage);
   }
-}
-
-
-
-
-
-
-function deleteEntry(id) {
-  const confirmDelete = confirm("Are you sure you want to delete this entry?");
-  if (!confirmDelete) return;
-
-  authFetch(`${BASE_URL}/api/entries/${id}`, {
-    method: "DELETE"
-  })
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to delete entry.");
-      return res.json();
-    })
-    .then(() => showEntries())
-    .catch(err => console.error(err));
 }
 
 
