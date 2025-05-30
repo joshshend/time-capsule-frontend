@@ -426,6 +426,5 @@ body.dark-mode input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 }
 
 body.dark-mode .register-hint {
-  color: #f0e6d2; /* or any light color that matches your theme */
+  color: #f0e6d2; 
 }
-

@@ -8,7 +8,6 @@ const prompts = [
 
 const BASE_URL = "https://time-capsule-backend-uq0s.onrender.com";
 
-
 function getToken() {
   return localStorage.getItem("authToken");
 }
@@ -25,7 +24,6 @@ function logoutUser(showAlert = true) {
     window.location.reload(); 
   }, 50); 
 }
-
 
 async function registerUser() {
   const email = document.getElementById("emailInput").value;
@@ -59,8 +57,6 @@ async function loginUser() {
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ email, password }),
 });
-
-
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Login failed");
 
@@ -73,9 +69,6 @@ async function loginUser() {
   }
 }
 
-
-
-
 function authFetch(url, options = {}) {
   const token = getToken();
   return fetch(url, {
@@ -87,7 +80,6 @@ function authFetch(url, options = {}) {
     }
   });
 }
-
 
 function saveEntry() {
   if (!getToken()) {
@@ -136,8 +128,6 @@ function saveEntry() {
     .catch((err) => console.error(err));
 }
 
-
-
 function showEntries() {
   authFetch(`${BASE_URL}/api/entries`)
     .then((res) => {
@@ -167,7 +157,6 @@ function renderEntries(entries) {
     return;
   }
 
-  // 🧠 Filter out entries by search term
   entries = entries.filter(entry => {
     const inTitle = entry.title?.toLowerCase().includes(searchQuery);
 const inMessage = entry.message?.toLowerCase().includes(searchQuery);
@@ -175,14 +164,12 @@ const inMessage = entry.message?.toLowerCase().includes(searchQuery);
     return inTitle || inMessage;
   });
 
-  // 🧠 Filter by locked/unlocked if specified
   if (filter === "locked") {
     entries = entries.filter(e => new Date(e.unlockDate) > now);
   } else if (filter === "unlocked") {
     entries = entries.filter(e => new Date(e.unlockDate) <= now);
   }
 
-  // 🔃 Sort entries by chosen criteria
   if (filter === "newest") {
   entries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 } else if (filter === "oldest") {
@@ -194,7 +181,6 @@ else if (filter === "az") {
     entries.sort((a, b) => b.title.localeCompare(a.title));
   }
 
-  // 🚫 Handle no results after filtering/searching
   if (!entries.length) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "no-entries";
@@ -203,7 +189,6 @@ else if (filter === "az") {
     return;
   }
 
-  // ✅ Render each entry
   for (let entry of entries) {
     const isUnlocked = new Date(entry.unlockDate) <= now;
 
@@ -220,8 +205,6 @@ else if (filter === "az") {
   <button class="delete-btn" onclick="deleteEntry('${entry._id}')">Delete</button>
   <span class='arrow'>▶</span>
 `;
-
-
     titleBar.onclick = (e) => {
       if (!e.target.classList.contains("delete-btn")) {
         div.classList.toggle("active");
@@ -275,9 +258,6 @@ else if (filter === "az") {
   }
 }
 
-
-
-
 function toggleAllEntries() {
   const all = document.querySelectorAll(".entry");
   all.forEach(entry => entry.classList.toggle("active"));
@@ -296,7 +276,6 @@ async function clearEntries() {
     }
   }
 }
-
 
 function toggleDarkMode() {
   const body = document.body;
@@ -342,7 +321,6 @@ function updateAuthUI() {
     
   }
 
-  // 🔐 Ping to check token validity
   fetch(`${BASE_URL}/api/ping`, {
   headers: { Authorization: `Bearer ${token}` }
 })
@@ -353,7 +331,7 @@ function updateAuthUI() {
     if (logoutTopBtn) logoutTopBtn.style.display = "inline-block";
   })
   .catch(() => {
-    logoutUser(false); // ⛔ Bad token, auto-logout silently
+    logoutUser(false);
   });
 
 }
