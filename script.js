@@ -19,11 +19,11 @@ function setToken(token) {
 
 function logoutUser(showAlert = true) {
   localStorage.removeItem("authToken");
-  updateAuthUI(); // Hide UI immediately
+  updateAuthUI(); 
   if (showAlert) alert("Logged out.");
   setTimeout(() => {
-    window.location.reload(); // 🔁 Full reset after short delay
-  }, 50); // Short delay ensures UI updates first
+    window.location.reload(); 
+  }, 50); 
 }
 
 
@@ -55,17 +55,18 @@ async function loginUser() {
 
   try {
     const res = await fetch(`${BASE_URL}/api/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email, password }),
+});
+
 
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Login failed");
 
-    setToken(data.token);          // ✅ save token first
-    updateAuthUI();                // ✅ update UI using token
-    showEntries();                 // ✅ fetch user’s entries
+    setToken(data.token);          
+    updateAuthUI();                
+    showEntries();                 
     alert("Logged in!");
   } catch (err) {
     alert("Error: " + err.message);
