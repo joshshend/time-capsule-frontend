@@ -159,7 +159,7 @@ function renderEntries(entries) {
 
   container.innerHTML = "";
 
-  if (entries.length === 0) {
+  if (!entries.length) {
     const emptyMessage = document.createElement("div");
     emptyMessage.className = "no-entries";
     emptyMessage.innerHTML = `<p>No entries yet. Write your first one above!</p>`;
@@ -167,39 +167,43 @@ function renderEntries(entries) {
     return;
   }
 
-  // Apply sorting
-  switch (filter) {
-    case "az":
-      entries.sort((a, b) => a.title.localeCompare(b.title));
-      break;
-    case "za":
-      entries.sort((a, b) => b.title.localeCompare(a.title));
-      break;
-    case "newest":
-      entries.sort((a, b) => new Date(b.unlockDate) - new Date(a.unlockDate));
-      break;
-    case "oldest":
-      entries.sort((a, b) => new Date(a.unlockDate) - new Date(b.unlockDate));
-      break;
-  }
-
-  let hasVisibleEntries = false;
-
-  for (let entry of entries) {
-    const isUnlocked = new Date(entry.unlockDate) <= now;
+  // 🧠 Filter out entries by search term
+  entries = entries.filter(entry => {
     const inTitle = entry.title.toLowerCase().includes(searchQuery);
     const inMessage = entry.message.toLowerCase().includes(searchQuery);
+    return inTitle || inMessage;
+  });
 
-    if (!inTitle && !inMessage) continue;
+  // 🧠 Filter by locked/unlocked if specified
+  if (filter === "locked") {
+    entries = entries.filter(e => new Date(e.unlockDate) > now);
+  } else if (filter === "unlocked") {
+    entries = entries.filter(e => new Date(e.unlockDate) <= now);
+  }
 
-    if (
-      (filter === "locked" && isUnlocked) ||
-      (filter === "unlocked" && !isUnlocked)
-    ) {
-      continue;
-    }
+  // 🔃 Sort entries by chosen criteria
+  if (filter === "newest") {
+    entries.sort((a, b) => new Date(b.unlockDate) - new Date(a.unlockDate));
+  } else if (filter === "oldest") {
+    entries.sort((a, b) => new Date(a.unlockDate) - new Date(b.unlockDate));
+  } else if (filter === "az") {
+    entries.sort((a, b) => a.title.localeCompare(b.title));
+  } else if (filter === "za") {
+    entries.sort((a, b) => b.title.localeCompare(a.title));
+  }
 
-    hasVisibleEntries = true;
+  // 🚫 Handle no results after filtering/searching
+  if (!entries.length) {
+    const emptyMessage = document.createElement("div");
+    emptyMessage.className = "no-entries";
+    emptyMessage.innerHTML = `<p>No entries match your current filters or search.</p>`;
+    container.appendChild(emptyMessage);
+    return;
+  }
+
+  // ✅ Render each entry
+  for (let entry of entries) {
+    const isUnlocked = new Date(entry.unlockDate) <= now;
 
     const div = document.createElement("div");
     div.className = "entry";
@@ -265,13 +269,6 @@ function renderEntries(entries) {
     div.appendChild(titleBar);
     div.appendChild(content);
     container.appendChild(div);
-  }
-
-  if (!hasVisibleEntries && entries.length > 0) {
-    const emptyMessage = document.createElement("div");
-    emptyMessage.className = "no-entries";
-    emptyMessage.innerHTML = `<p>No entries match your current filters or search.</p>`;
-    container.appendChild(emptyMessage);
   }
 }
 
