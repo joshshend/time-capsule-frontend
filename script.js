@@ -6,6 +6,9 @@ const prompts = [
   "What's one lesson you've recently learned?"
 ];
 
+const BASE_URL = "https://time-capsule-backend-uq0s.onrender.com";
+
+
 function getToken() {
   return localStorage.getItem("authToken");
 }
@@ -29,7 +32,7 @@ async function registerUser() {
   const password = document.getElementById("passwordInput").value;
   if (!email || !password) return alert("Email and password required");
   try {
-    const res = await fetch("http://localhost:3000/api/register", {
+    const res = await fetch(`${BASE_URL}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -51,7 +54,7 @@ async function loginUser() {
   }
 
   try {
-    const res = await fetch("http://localhost:3000/api/login", {
+    const res = await fetch(`${BASE_URL}/api/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
@@ -114,7 +117,7 @@ function saveEntry() {
     unlockDate
   };
 
-  authFetch("http://localhost:3000/api/entries", {
+  authFetch(`${BASE_URL}/api/register`, {
     method: "POST",
     body: JSON.stringify(entry)
   })
@@ -135,7 +138,7 @@ function saveEntry() {
 
 
 function showEntries() {
-  authFetch("http://localhost:3000/api/entries")
+  authFetch(`${BASE_URL}/api/register`)
     .then((res) => {
       if (!res.ok) throw new Error("Not logged in or error");
       return res.json();
@@ -258,7 +261,7 @@ function deleteEntry(id) {
   const confirmDelete = confirm("Are you sure you want to delete this entry?");
   if (!confirmDelete) return;
 
-  authFetch(`http://localhost:3000/api/entries/${id}`, {
+  authFetch(`${BASE_URL}/api/entries/${id}`, {
     method: "DELETE"
   })
     .then(res => {
@@ -280,7 +283,7 @@ function toggleAllEntries() {
 async function clearEntries() {
   if (confirm("Are you sure you want to delete all entries?")) {
     try {
-      const res = await authFetch("http://localhost:3000/api/entries", {
+      const res = await authFetch(`${BASE_URL}/api/register`, {
         method: "DELETE"
       });
       if (!res.ok) throw new Error("Failed to delete all entries");
@@ -337,17 +340,18 @@ function updateAuthUI() {
   }
 
   // 🔐 Ping to check token validity
-  fetch("http://localhost:3000/api/ping", {
-    headers: { Authorization: `Bearer ${token}` }
+  fetch(`${BASE_URL}/api/ping`, {
+  headers: { Authorization: `Bearer ${token}` }
+})
+  .then((res) => {
+    if (!res.ok) throw new Error("Invalid token");
+    authPanel.style.display = "none";
+    loggedInMessage.style.display = "block";
+    if (logoutTopBtn) logoutTopBtn.style.display = "inline-block";
   })
-    .then((res) => {
-      if (!res.ok) throw new Error("Invalid token");
-      authPanel.style.display = "none";
-      loggedInMessage.style.display = "block";
-      if (logoutTopBtn) logoutTopBtn.style.display = "inline-block";
-    })
-    .catch(() => {
-      logoutUser(false); // ⛔ Bad token, auto-logout silently
-    });
+  .catch(() => {
+    logoutUser(false); // ⛔ Bad token, auto-logout silently
+  });
+
 }
 
