@@ -154,7 +154,7 @@ function showEntries() {
 function renderEntries(entries) {
   const container = document.getElementById("entries");
   const filter = document.getElementById("filterSelect")?.value || "all";
-  const searchQuery = document.getElementById("searchBar")?.value.toLowerCase() || "";
+  const searchQuery = (document.getElementById("searchBar")?.value || "").trim().toLowerCase();
   const now = new Date();
 
   container.innerHTML = "";
@@ -169,8 +169,9 @@ function renderEntries(entries) {
 
   // 🧠 Filter out entries by search term
   entries = entries.filter(entry => {
-    const inTitle = entry.title.toLowerCase().includes(searchQuery);
-    const inMessage = entry.message.toLowerCase().includes(searchQuery);
+    const inTitle = entry.title?.toLowerCase().includes(searchQuery);
+const inMessage = entry.message?.toLowerCase().includes(searchQuery);
+
     return inTitle || inMessage;
   });
 
@@ -183,10 +184,10 @@ function renderEntries(entries) {
 
   // 🔃 Sort entries by chosen criteria
   if (filter === "newest") {
-    entries.sort((a, b) => new Date(b.unlockDate) - new Date(a.unlockDate));
-  } else if (filter === "oldest") {
-    entries.sort((a, b) => new Date(a.unlockDate) - new Date(b.unlockDate));
-  } else if (filter === "az") {
+  entries.sort((a, b) => b.id - a.id);
+} else if (filter === "oldest") {
+  entries.sort((a, b) => a.id - b.id);
+} else if (filter === "az") {
     entries.sort((a, b) => a.title.localeCompare(b.title));
   } else if (filter === "za") {
     entries.sort((a, b) => b.title.localeCompare(a.title));
