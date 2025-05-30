@@ -428,3 +428,31 @@ body.dark-mode input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 body.dark-mode .register-hint {
   color: #f0e6d2; 
 }
+
+.site-footer {
+  text-align: center;
+  padding: 1.5rem 0;
+  background-color: var(--background);
+  color: var(--text);
+  border-top: 1px solid #ccc;
+}
+
+.site-footer .social-icons {
+  margin-top: 0.5rem;
+}
+
+.site-footer .social-icons a {
+  margin: 0 0.5rem;
+  display: inline-block;
+}
+
+.site-footer .social-icons img {
+  width: 24px;
+  height: 24px;
+  filter: invert(50%);
+  transition: transform 0.2s ease;
+}
+
+.site-footer .social-icons img:hover {
+  transform: scale(1.2);
+}
