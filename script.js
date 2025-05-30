@@ -118,7 +118,7 @@ function saveEntry() {
     unlockDate
   };
 
-  authFetch(`${BASE_URL}/api/register`, {
+  authFetch(`${BASE_URL}/api/entries`, {
     method: "POST",
     body: JSON.stringify(entry)
   })
@@ -284,7 +284,7 @@ function toggleAllEntries() {
 async function clearEntries() {
   if (confirm("Are you sure you want to delete all entries?")) {
     try {
-      const res = await authFetch(`${BASE_URL}/api/register`, {
+      const res = await authFetch(`${BASE_URL}/api/entries`, {
         method: "DELETE"
       });
       if (!res.ok) throw new Error("Failed to delete all entries");
