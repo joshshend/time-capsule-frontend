@@ -184,10 +184,11 @@ const inMessage = entry.message?.toLowerCase().includes(searchQuery);
 
   // 🔃 Sort entries by chosen criteria
   if (filter === "newest") {
-  entries.sort((a, b) => b.id - a.id);
+  entries.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 } else if (filter === "oldest") {
-  entries.sort((a, b) => a.id - b.id);
-} else if (filter === "az") {
+  entries.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+}
+else if (filter === "az") {
     entries.sort((a, b) => a.title.localeCompare(b.title));
   } else if (filter === "za") {
     entries.sort((a, b) => b.title.localeCompare(a.title));
