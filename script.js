@@ -137,7 +137,7 @@ function showEntries() {
     .then((entries) => renderEntries(entries))
     .catch((err) => {
       console.warn("Could not load entries:", err);
-      renderEntries([]); // Show empty state even if fetch fails
+      renderEntries([]);
     });
 }
 
@@ -270,7 +270,7 @@ async function clearEntries() {
         method: "DELETE"
       });
       if (!res.ok) throw new Error("Failed to delete all entries");
-      showEntries(); // Refresh the list
+      showEntries(); 
     } catch (e) {
       console.error("Clear all failed:", e);
     }
