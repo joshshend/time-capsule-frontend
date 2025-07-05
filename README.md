@@ -12,7 +12,7 @@ Sign in with user authentication, set a time and date, and write your message!
 - User accounts with JWT auth
 - MongoDB database for full persistence
 
-🛠️ **Tech Stack**
+**Tech Stack**
 - Frontend: HTML, CSS, JS
 - Backend: Node.js + Express
 - Database: MongoDB Atlas
